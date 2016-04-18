@@ -83,6 +83,13 @@ var isLastStageSuccess = function isLastStageSuccess(stage, status) {
   return stage === "mosaic" && status === "FINISHED";
 };
 
+var uniq = function(a) {
+  var seen = {};
+  return a.filter(function(item) {
+    return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+  });
+};
+
 var notifyJobComplete = function(jobId, tms, images, callback) {
   images = images.map(function(x) {
     return {
@@ -110,7 +117,7 @@ var notifyJobComplete = function(jobId, tms, images, callback) {
     uri: OAM_CATALOG_URL + "tms",
     json: {
       uri: tms,
-      images: images
+      images: uniq(images)
     }
   }, function(err, rsp, body) {
     if (err) {
